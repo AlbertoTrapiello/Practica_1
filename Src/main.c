@@ -40,6 +40,7 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include <stdlib.h>
+#include <time.h>   
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -110,7 +111,8 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
-	int tiempo = (rand()%3+2)*500000; //el tiempo est� traducido a ciclos de reloj
+	srand(time(NULL));
+	tiempo = ((rand()%3)+2)*500000; //el tiempo est� traducido a ciclos de reloj, not quite
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -141,7 +143,8 @@ int main(void)
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
-						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
+						srand(time(NULL));
+						tiempo = ((rand()%3)+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);	
 				}
 				
@@ -153,7 +156,8 @@ int main(void)
 						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
-						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
+						srand(time(NULL));
+						tiempo = ((rand()%3)+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);
 				}
 				flag = 0;
