@@ -64,8 +64,9 @@ static void MX_GPIO_Init(void);
 
 //la variable ha de ser volatile para que se pueda actualizar desde cualquier punto
 volatile int flag = 0;//flag que indica que ha saltado la interrupci�n
-volatile int cont;
-volatile int tiempo;
+volatile unsigned long cont;
+volatile unsigned long t_reaccion;
+volatile unsigned long tiempo;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -110,7 +111,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
 	int tiempo = (rand()%3+2)*500000; //el tiempo est� traducido a ciclos de reloj
-	int tiempo_yo;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -127,8 +127,6 @@ int main(void)
 		}
 		cont++;//con cada ciclo de reloj suma uno al contador para poder llevar una pseudo-cuenta del timepo transcurrido
 
-		 //suma con cada ciclo de reloj
-		//tiempo_yo += cont;
 		if (flag == 1) //si el flag está a uno, que quiere indicar que ha saltado la interrupción
 		{
 				if (cont < tiempo)// si cuando se pulsa el botón no ha pasado el tiempo (se ha pulsado )
@@ -142,18 +140,19 @@ int main(void)
 						HAL_Delay(100);
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 						cont = 0;//reinicia el contador para volver a jugar
+						t_reaccion = 0;
 						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);	
 				}
 				
 				if (cont >= tiempo) //en caso de que se pulse despu�s de que se encienda el LED
 				{
-						int tiempo_retraso = tiempo_yo - tiempo;
 						//si se ha pulsado el pulsador más tarde del momento en el que se ha
 						//encendido la luza apaga la luz y enciende otra para mostrar que se ha pulsado correctamente
 						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
 						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
 						cont = 0;//reinicia el contador para volver a jugar
+						t_reaccion = 0;
 						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);
 				}
@@ -164,6 +163,7 @@ int main(void)
 				//aqu� no s puede resetear cont = 0; se tendrña que haver sólo si se ha
 				// pulsado el botón ya que sólo en ese caso hay que restear el juego
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+				t_reaccion++;//en cuanto se enciende la luz empieza a contar el número de ciclos que tarda en pulsar el botón
 		}
 		 /* USER CODE END WHILE */
   }
