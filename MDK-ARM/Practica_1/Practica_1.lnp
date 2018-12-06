@@ -1,0 +1,24 @@
+--cpu=Cortex-M4.fp
+"practica_1\startup_stm32f411xe.o"
+"practica_1\main.o"
+"practica_1\stm32f4xx_it.o"
+"practica_1\stm32f4xx_hal_msp.o"
+"practica_1\stm32f4xx_hal_tim.o"
+"practica_1\stm32f4xx_hal_tim_ex.o"
+"practica_1\stm32f4xx_hal_rcc.o"
+"practica_1\stm32f4xx_hal_rcc_ex.o"
+"practica_1\stm32f4xx_hal_flash.o"
+"practica_1\stm32f4xx_hal_flash_ex.o"
+"practica_1\stm32f4xx_hal_flash_ramfunc.o"
+"practica_1\stm32f4xx_hal_gpio.o"
+"practica_1\stm32f4xx_hal_dma_ex.o"
+"practica_1\stm32f4xx_hal_dma.o"
+"practica_1\stm32f4xx_hal_pwr.o"
+"practica_1\stm32f4xx_hal_pwr_ex.o"
+"practica_1\stm32f4xx_hal_cortex.o"
+"practica_1\stm32f4xx_hal.o"
+"practica_1\system_stm32f4xx.o"
+--library_type=microlib --strict --scatter "Practica_1\Practica_1.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "Practica_1.map" -o Practica_1\Practica_1.axf
