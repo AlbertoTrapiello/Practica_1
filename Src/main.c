@@ -6,7 +6,7 @@
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
+  * USER CODE END. Other portions of this file, whether
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
@@ -63,11 +63,11 @@ static void MX_GPIO_Init(void);
 /* USER CODE BEGIN 0 */
 
 //la variable ha de ser volatile para que se pueda actualizar desde cualquier punto
-volatile int flag = 0;//flag que indica que ha saltado la interrupción
+volatile int flag = 0;//flag que indica que ha saltado la interrupciï¿½n
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-		if(GPIO_Pin == GPIO_PIN_0)//si la interrupción salta con el PA0 activa el flag
+		if(GPIO_Pin == GPIO_PIN_0)//si la interrupciï¿½n salta con el PA0 activa el flag
 		{
 			flag = 1;
 		}
@@ -105,30 +105,31 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 	int cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
-	int tiempo = (rand()%3+2)*500000; //el tiempo está traducido a ciclos de reloj
+	int tiempo = (rand()%3+2)*500000; //el tiempo estï¿½ traducido a ciclos de reloj
 	int tiempo_yo;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	
+
   while (1)
   {
-		if(cont == 0)
+		if(cont == 0)//en caso de que el contador se reinicie se apagan las luces
 		{
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
 		}
-		cont++;
- 
-		 //suma con cada ciclo de reloj 
+		cont++;//con cada ciclo de reloj suma uno al contador para poder llevar una pseudo-cuenta del timepo transcurrido
+
+		 //suma con cada ciclo de reloj
 		//tiempo_yo += cont;
-		if (flag == 1) //si el flag está a uno, que quiere indicar que ha saltado la interrupción 
+		if (flag == 1) //si el flag estÃ¡ a uno, que quiere indicar que ha saltado la interrupciÃ³n
 		{
-				if (cont < tiempo)// si cuando se pulsa el botón no ha pasado el tiempo (se ha pulsado )
+				if (cont < tiempo)// si cuando se pulsa el botÃ³n no ha pasado el tiempo (se ha pulsado )
 				{
+						//parpadea la luz para indicar que se ha fallado
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 						HAL_Delay(100);
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
@@ -136,23 +137,26 @@ int main(void)
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 						HAL_Delay(100);
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-						cont = 0;
+						cont = 0;//reinicia el contador para volver a jugar
 						HAL_Delay(5000);
-					tiempo = (rand()%3+2)*500000;
+						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
 				}
-				else //en caso de que se pulse después de que se encienda el LED
+				else //en caso de que se pulse despuï¿½s de que se encienda el LED
 				{
 						int tiempo_retraso = tiempo_yo - tiempo;
+						//si se ha pulsado el pulsador mÃ¡s tarde del momento en el que se ha
+						//encendido la luza apaga la luz y enciende otra para mostrar que se ha pulsado correctamente
 						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
 						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+						cont = 0;//reinicia el contador para volver a jugar
+						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);
-						tiempo = (rand()%3+2)*500000;
-						cont = 0;
 				}
 		}
 		if(cont >= tiempo)//en caso de que el contador llegue al tiempo establecido
 		{
-				//aquí no s puede resetear cont = 0;
+				//aquï¿½ no s puede resetear cont = 0; se tendrÃ±a que haver sÃ³lo si se ha
+				// pulsado el botÃ³n ya que sÃ³lo en ese caso hay que restear el juego
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
 		}
 		 /* USER CODE END WHILE */
@@ -172,13 +176,13 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
 
-    /**Configure the main internal regulator output voltage 
+    /**Configure the main internal regulator output voltage
     */
   __HAL_RCC_PWR_CLK_ENABLE();
 
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-    /**Initializes the CPU, AHB and APB busses clocks 
+    /**Initializes the CPU, AHB and APB busses clocks
     */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -189,7 +193,7 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-    /**Initializes the CPU, AHB and APB busses clocks 
+    /**Initializes the CPU, AHB and APB busses clocks
     */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -203,11 +207,11 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-    /**Configure the Systick interrupt time 
+    /**Configure the Systick interrupt time
     */
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
-    /**Configure the Systick 
+    /**Configure the Systick
     */
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
@@ -215,9 +219,9 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -282,7 +286,7 @@ void _Error_Handler(char *file, int line)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
