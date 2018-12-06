@@ -39,8 +39,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
-#include <stdlib.h>
-#include <time.h>   
+#include <stdlib.h> 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -110,8 +109,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+	int i = 0;
 	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
-	srand(time(NULL));
+	srand(i++);
 	tiempo = ((rand()%3)+2)*500000; //el tiempo est� traducido a ciclos de reloj, not quite
   /* USER CODE END 2 */
 
@@ -143,7 +143,7 @@ int main(void)
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
-						srand(time(NULL));
+						srand(i++);
 						tiempo = ((rand()%3)+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);	
 				}
@@ -156,7 +156,7 @@ int main(void)
 						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
-						srand(time(NULL));
+						srand(i++);
 						tiempo = ((rand()%3)+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);
 				}
