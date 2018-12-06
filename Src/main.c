@@ -64,6 +64,8 @@ static void MX_GPIO_Init(void);
 
 //la variable ha de ser volatile para que se pueda actualizar desde cualquier punto
 volatile int flag = 0;//flag que indica que ha saltado la interrupci�n
+volatile int cont;
+volatile int tiempo;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -73,6 +75,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 }
 /* USER CODE END 0 */
+
+
 
 /**
   * @brief  The application entry point.
@@ -104,7 +108,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-	int cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
+	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
 	int tiempo = (rand()%3+2)*500000; //el tiempo est� traducido a ciclos de reloj
 	int tiempo_yo;
   /* USER CODE END 2 */
@@ -138,10 +142,11 @@ int main(void)
 						HAL_Delay(100);
 						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 						cont = 0;//reinicia el contador para volver a jugar
-						HAL_Delay(5000);
 						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
+						HAL_Delay(5000);	
 				}
-				else //en caso de que se pulse despu�s de que se encienda el LED
+				
+				if (cont >= tiempo) //en caso de que se pulse despu�s de que se encienda el LED
 				{
 						int tiempo_retraso = tiempo_yo - tiempo;
 						//si se ha pulsado el pulsador más tarde del momento en el que se ha
@@ -152,6 +157,7 @@ int main(void)
 						tiempo = (rand()%3+2)*500000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);
 				}
+				flag = 0;
 		}
 		if(cont >= tiempo)//en caso de que el contador llegue al tiempo establecido
 		{
