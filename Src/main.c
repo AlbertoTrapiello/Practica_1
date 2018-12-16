@@ -101,7 +101,7 @@ uint16_t random_LED ()
 			return GPIO_PIN_12;
 		}
 	}	
-	return GPIO_PIN_12;
+	return GPIO_PIN_12;//por defecto devuelve el 12 por si acaso
 }
 
 /**
