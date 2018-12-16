@@ -144,7 +144,7 @@ int main(void)
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
 						srand(i++);
-						tiempo = ((rand()%3)+2)*500000;//carga un nuevo tiempo para la siguiente
+						tiempo = ((rand()%3)+2)*1000000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);	
 				}
 				
@@ -157,7 +157,7 @@ int main(void)
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
 						srand(i++);
-						tiempo = ((rand()%3)+2)*500000;//carga un nuevo tiempo para la siguiente
+						tiempo = ((rand()%3)+2)*1000000;//carga un nuevo tiempo para la siguiente
 						HAL_Delay(5000);
 				}
 				flag = 0;
