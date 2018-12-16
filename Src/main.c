@@ -131,22 +131,23 @@ int main(void)
 
 		if (flag == 1) //si el flag está a uno, que quiere indicar que ha saltado la interrupción
 		{
-				if (cont < tiempo)// si cuando se pulsa el botón no ha pasado el tiempo (se ha pulsado )
-				{
-						//parpadea la luz para indicar que se ha fallado
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-						HAL_Delay(100);
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-						HAL_Delay(100);
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-						HAL_Delay(100);
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-						cont = 0;//reinicia el contador para volver a jugar
-						t_reaccion = 0;
-						srand(i++);
-						tiempo = ((rand()%3)+2)*1000000;//carga un nuevo tiempo para la siguiente
-						HAL_Delay(5000);	
-				}
+					
+//				if (cont < tiempo)// si cuando se pulsa el botón no ha pasado el tiempo (se ha pulsado )
+//				{
+//						//parpadea la luz para indicar que se ha fallado
+//						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+//						HAL_Delay(100);
+//						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+//						HAL_Delay(100);
+//						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+//						HAL_Delay(100);
+//						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+//						cont = 0;//reinicia el contador para volver a jugar
+//						t_reaccion = 0;
+//						srand(i++);
+//						tiempo = ((rand()%3)+2)*1000000;//carga un nuevo tiempo para la siguiente
+//						HAL_Delay(5000);	
+//				}
 				
 				if (cont >= tiempo) //en caso de que se pulse despu�s de que se encienda el LED
 				{
@@ -171,6 +172,12 @@ int main(void)
 		}
 		 /* USER CODE END WHILE */
   }
+	if (cont < tiempo)// si cuando no ha pasado el tiempo
+			//desactiva las interrupciones
+			HAL_NVIC_DisableIRQ(EXTI0_IRQn);//seleccionada por evitar que sea mascarable
+	else	
+			//activa las interrupciones
+			HAL_NVIC_EnableIRQ(EXTI0_IRQn);//seleccionada por evitar que sea mascarable
 	/* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
 
