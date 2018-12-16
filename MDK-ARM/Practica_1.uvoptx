@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>184</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134220800</Address>
+          <Address>134221306</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,6 +186,11 @@
           <count>3</count>
           <WinNumber>1</WinNumber>
           <ItemText>last_LED</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>medida</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

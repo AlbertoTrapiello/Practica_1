@@ -110,6 +110,8 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 	int i = 0;
+	int j = 4;//contador de las medidas 
+	int medida [5];//vector de medidas
 	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
 	srand(i++);
 	tiempo = ((rand()%3)+2)*500000; //el tiempo est� traducido a ciclos de reloj, not quite
@@ -118,7 +120,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  while (1)
+  while ( j >= 0)
   {
 		if(cont == 0)//en caso de que el contador se reinicie se apagan las luces
 		{
@@ -159,6 +161,8 @@ int main(void)
 						t_reaccion = 0;
 						srand(i++);
 						tiempo = ((rand()%3)+2)*1000000;//carga un nuevo tiempo para la siguiente
+						medida[j] = tiempo;//guarda la medida en cada posición
+						j--;
 						HAL_Delay(5000);
 				}
 				flag = 0;
@@ -180,7 +184,6 @@ int main(void)
 			HAL_NVIC_EnableIRQ(EXTI0_IRQn);//seleccionada por evitar que sea mascarable
 	/* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
-
 }
 
 /**
