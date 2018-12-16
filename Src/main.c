@@ -64,10 +64,12 @@ static void MX_GPIO_Init(void);
 
 //la variable ha de ser volatile para que se pueda actualizar desde cualquier punto
 volatile int flag = 0;//flag que indica que ha saltado la interrupci�n
-volatile unsigned long cont;
-volatile unsigned long t_reaccion;
-volatile unsigned long tiempo;
-
+volatile unsigned long cont;//variable que cuenta todos los ciclos de reloj hasta que se pulse
+volatile unsigned long t_reaccion;//variable que cuenta los ciclos de reloj desde que se enciende el LED hasta que se pulsa el botón
+volatile unsigned long tiempo;//variable que establece el tiempo de espera para que se encienda el LED
+volatile int i = 0, j= 0;//variable encargada de cambiar la semilla del srand
+uint16_t last_LED;//almacena el valor del último LED
+	
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 		if(GPIO_Pin == GPIO_PIN_0)//si la interrupci�n salta con el PA0 activa el flag
@@ -77,7 +79,30 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 /* USER CODE END 0 */
 
-
+uint16_t random_LED ()
+{
+	srand(j++);
+	switch(rand()%4 + 1)//alterna entre los 4 posibles valores de los LEDs
+	{
+		case 1:
+		{
+			return GPIO_PIN_15;
+		}
+		case 2:
+		{
+			return GPIO_PIN_14;
+		}
+		case 3:
+		{
+			return GPIO_PIN_13;
+		}
+		case 4:
+		{
+			return GPIO_PIN_12;
+		}
+	}	
+	return GPIO_PIN_12;
+}
 
 /**
   * @brief  The application entry point.
@@ -109,7 +134,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-	int i = 0;
+	
 	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
 	srand(i++);
 	tiempo = ((rand()%3)+2)*500000; //el tiempo est� traducido a ciclos de reloj, not quite
@@ -120,12 +145,14 @@ int main(void)
 
   while (1)
   {
+	
 		if(cont == 0)//en caso de que el contador se reinicie se apagan las luces
 		{
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+				last_LED = random_LED ();//alamcena en el last_LED el valor random entre GPIO 15 a 12
 		}
 		cont++;//con cada ciclo de reloj suma uno al contador para poder llevar una pseudo-cuenta del timepo transcurrido
 
@@ -134,13 +161,13 @@ int main(void)
 				if (cont < tiempo)// si cuando se pulsa el botón no ha pasado el tiempo (se ha pulsado )
 				{
 						//parpadea la luz para indicar que se ha fallado
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+						HAL_GPIO_TogglePin(GPIOD, last_LED);
 						HAL_Delay(100);
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+						HAL_GPIO_TogglePin(GPIOD, last_LED);
 						HAL_Delay(100);
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+						HAL_GPIO_TogglePin(GPIOD, last_LED);
 						HAL_Delay(100);
-						HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+						HAL_GPIO_TogglePin(GPIOD, last_LED);
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
 						srand(i++);
@@ -152,8 +179,9 @@ int main(void)
 				{
 						//si se ha pulsado el pulsador más tarde del momento en el que se ha
 						//encendido la luza apaga la luz y enciende otra para mostrar que se ha pulsado correctamente
-						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
-						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+						HAL_GPIO_WritePin(GPIOD, last_LED, GPIO_PIN_RESET);
+						last_LED = random_LED ();//alamcena en el last_LED el valor random entre GPIO 15 a 12
+						HAL_GPIO_WritePin(GPIOD, last_LED, GPIO_PIN_SET);
 						cont = 0;//reinicia el contador para volver a jugar
 						t_reaccion = 0;
 						srand(i++);
@@ -164,11 +192,13 @@ int main(void)
 		}
 		if(cont >= tiempo)//en caso de que el contador llegue al tiempo establecido
 		{
+				//last_LED = random_LED ();//alamcena en el last_LED el valor random entre GPIO 15 a 12
 				//aqu� no s puede resetear cont = 0; se tendrña que haver sólo si se ha
 				// pulsado el botón ya que sólo en ese caso hay que restear el juego
-				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(GPIOD, last_LED, GPIO_PIN_SET);
 				t_reaccion++;//en cuanto se enciende la luz empieza a contar el número de ciclos que tarda en pulsar el botón
 		}
+		
 		 /* USER CODE END WHILE */
   }
 	/* USER CODE BEGIN 3 */
