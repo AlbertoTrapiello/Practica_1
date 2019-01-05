@@ -112,7 +112,7 @@ int main(void)
 	int i = 0;
 	cont = 0; //variable que lleva la cuenta de los ciclos que han pasado
 	srand(i++);
-	tiempo = ((rand()%3)+2)*500000; //el tiempo est� traducido a ciclos de reloj, not quite
+	tiempo = ((rand()%3)+2)*1000000; //el tiempo est� traducido a ciclos de reloj, not quite
   /* USER CODE END 2 */
 
   /* Infinite loop */
